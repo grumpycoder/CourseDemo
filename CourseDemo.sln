@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CourseDemo.Web", "CourseDemo.Web\CourseDemo.Web.csproj", "{FCFD4538-F02C-4A8D-8CF0-2E2F4E9CF7E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CourseDemo.Data", "CourseDemo.Data\CourseDemo.Data.csproj", "{71D1F030-725F-436E-8165-3894A512063C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CourseDemo.Domain", "CourseDemo.Domain\CourseDemo.Domain.csproj", "{B353045F-5D9B-4016-85B6-80A3379701C7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FCFD4538-F02C-4A8D-8CF0-2E2F4E9CF7E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCFD4538-F02C-4A8D-8CF0-2E2F4E9CF7E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCFD4538-F02C-4A8D-8CF0-2E2F4E9CF7E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCFD4538-F02C-4A8D-8CF0-2E2F4E9CF7E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71D1F030-725F-436E-8165-3894A512063C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71D1F030-725F-436E-8165-3894A512063C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71D1F030-725F-436E-8165-3894A512063C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71D1F030-725F-436E-8165-3894A512063C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B353045F-5D9B-4016-85B6-80A3379701C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B353045F-5D9B-4016-85B6-80A3379701C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B353045F-5D9B-4016-85B6-80A3379701C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B353045F-5D9B-4016-85B6-80A3379701C7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
