@@ -28,6 +28,8 @@ namespace CourseDemo.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddMvc();
+            
             // services.AddDbContext<CourseContext>(opt =>
             //     opt.UseSqlServer(Configuration.GetConnectionString("CourseContext"),
             //             x => x.MigrationsAssembly("CourseCatalog.Web"))
@@ -55,6 +57,8 @@ namespace CourseDemo.Web
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            
+           
         }
     }
 }
