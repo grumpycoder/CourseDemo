@@ -55,8 +55,16 @@ namespace CourseDemo.Web
             app.UseRouting();
 
             app.UseAuthorization();
-
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+ 
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "api",
+                    pattern: "api/{controller}/{id?}");
+                
+                endpoints.MapControllers();
+                
+            });
             
            
         }

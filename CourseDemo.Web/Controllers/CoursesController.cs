@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace CourseDemo.Web.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class CoursesController : Controller
     {
         private readonly CourseContext _context;
@@ -21,7 +21,7 @@ namespace CourseDemo.Web.Controllers
 
         public async Task<IActionResult> Get()
         {
-            var dto = await _context.Courses.ToListAsync();
+            var dto = await _context.Courses.Take(10).ToListAsync();
             return Ok(dto);
         }
     }
