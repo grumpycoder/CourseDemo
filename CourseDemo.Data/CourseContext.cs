@@ -30,11 +30,12 @@ namespace CourseDemo.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<CourseLevel>().ToTable("CourseLevels");
-            modelBuilder.Entity<CourseType>().ToTable("CourseTypes");
-            modelBuilder.Entity<Grade>().ToTable("Grades");
-            modelBuilder.Entity<DeliveryType>().ToTable("DeliveryTypes");
-            modelBuilder.Entity<Tag>().ToTable("Tags");
+            modelBuilder.Entity<Course>().ToTable("Courses", "Common");
+            modelBuilder.Entity<CourseLevel>().ToTable("CourseLevels", "Common");
+            modelBuilder.Entity<CourseType>().ToTable("CourseTypes", "Common");
+            modelBuilder.Entity<Grade>().ToTable("Grades", "Common");
+            modelBuilder.Entity<DeliveryType>().ToTable("DeliveryTypes", "Common");
+            modelBuilder.Entity<Tag>().ToTable("Tags", "Common");
         }
     }
 }

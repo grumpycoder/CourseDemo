@@ -4,14 +4,16 @@ using CourseDemo.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CourseDemo.Data.Migrations
 {
     [DbContext(typeof(CourseContext))]
-    partial class CourseContextModelSnapshot : ModelSnapshot
+    [Migration("20200317025029_update-schema")]
+    partial class updateschema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,7 +89,7 @@ namespace CourseDemo.Data.Migrations
 
                     b.HasIndex("LowGradeId");
 
-                    b.ToTable("Courses","Common");
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("CourseDemo.Domain.CourseLevel", b =>
