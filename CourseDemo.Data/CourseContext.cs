@@ -21,6 +21,7 @@ namespace CourseDemo.Data
         // }
         
         public DbSet<Course> Courses { get; set; }
+        public DbSet<Program> Programs { get; set; }
 
         // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         // {
@@ -31,6 +32,7 @@ namespace CourseDemo.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Course>().ToTable("Courses", "Common");
+            modelBuilder.Entity<Program>().ToTable("Programs", "CareerTech");
             modelBuilder.Entity<CourseLevel>().ToTable("CourseLevels", "Common");
             modelBuilder.Entity<CourseType>().ToTable("CourseTypes", "Common");
             modelBuilder.Entity<Grade>().ToTable("Grades", "Common");
