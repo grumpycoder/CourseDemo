@@ -1,4 +1,4 @@
-namespace CourseDemo.Domain
+namespace CourseDemo.Domain.Models
 {
     public class Program
     {

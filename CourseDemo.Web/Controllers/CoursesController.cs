@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CourseDemo.Data;
 using CourseDemo.Domain;
+using CourseDemo.Domain.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,7 +21,7 @@ namespace CourseDemo.Web.Controllers
         }
 
         [HttpGet, Route("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetCourse(int id)
         {
             var course = await _context.Courses
                 .Include(x => x.HighGrade)
@@ -34,13 +35,8 @@ namespace CourseDemo.Web.Controllers
         }
 
         [HttpPost, Route("{courseId}/programs")]
-        public async Task<IActionResult> AssignProgram(int courseId)
+        public async Task<IActionResult> AssignProgram(int courseId, AssignProgramDto dto)
         {
-            //, int programId, int beginYear, int? endYear
-            int programId = 5;
-            int beginYear = 2015;
-            int? endYear = null; 
-                
             var course = await _context.Courses
                 .Include(x => x.HighGrade)
                 .Include(x => x.LowGrade)
@@ -49,8 +45,9 @@ namespace CourseDemo.Web.Controllers
                 .Include(x => x.ProgramAssignments)
                 .SingleOrDefaultAsync(x => x.Id == courseId);
 
-            var program = _context.Programs.Find(programId);
-            course.AssignProgram(program, beginYear, endYear);
+            var program = _context.Programs.Find(dto.ProgramId);
+            
+            course.AssignProgram(program, dto.BeginYear, dto.EndYear);
 
             _context.SaveChanges();
 
@@ -75,6 +72,11 @@ namespace CourseDemo.Web.Controllers
 
             return Ok();
         }
-        
+
+        [HttpPut, Route("{courseId}")]
+        public async Task<IActionResult> UpdateCourse(int courseId, UpdateCourseDto dto)
+        {
+            return Ok();
+        }
     }
 }

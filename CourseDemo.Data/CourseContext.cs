@@ -1,4 +1,5 @@
 using CourseDemo.Domain;
+using CourseDemo.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
