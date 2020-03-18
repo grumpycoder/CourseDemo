@@ -1,5 +1,6 @@
 using CourseDemo.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace CourseDemo.Data
 {
@@ -15,29 +16,57 @@ namespace CourseDemo.Data
             : base(options)
         { }
         
-        // public CourseContext() 
-        // {
-        //     ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-        // }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            var _useConsoleLogger = true; 
+            
+            ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
+            {
+                builder
+                    .AddFilter((category, level) =>
+                        category == DbLoggerCategory.Database.Command.Name && level == LogLevel.Information)
+                    .AddConsole();
+            });
+
+            optionsBuilder.UseLazyLoadingProxies();
+            
+            if (_useConsoleLogger)
+            {
+                optionsBuilder
+                    .UseLoggerFactory(loggerFactory)
+                    .EnableSensitiveDataLogging();
+            }
+        }
         
         public DbSet<Course> Courses { get; set; }
         public DbSet<Program> Programs { get; set; }
 
-        // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        // {
-        //     string connectionString = "Server=.;Database=CourseDemo;User Id=sa;Password=P@55w0rd;";
-        //     optionsBuilder.UseSqlServer(connectionString);
-        // }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Course>().ToTable("Courses", "Common");
-            modelBuilder.Entity<Program>().ToTable("Programs", "CareerTech");
+            modelBuilder.Entity<Course>(x =>
+            {
+                x.ToTable("Courses", "Common");
+                x.HasMany(p => p.ProgramAssignments).WithOne(p => p.Course)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .Metadata.PrincipalToDependent.SetPropertyAccessMode(PropertyAccessMode.Field);
+            });
+
+            // modelBuilder.Entity<Program>(x =>
+            // {
+            //     x.ToTable("Programs", "CareerTech");
+            //     x.Property(p => p.Id).HasColumnName("Id"); 
+            // }); 
+
+            modelBuilder.Entity<Program>().ToTable("Programs", "CareerTech"); 
+            
             modelBuilder.Entity<CourseLevel>().ToTable("CourseLevels", "Common");
             modelBuilder.Entity<CourseType>().ToTable("CourseTypes", "Common");
             modelBuilder.Entity<Grade>().ToTable("Grades", "Common");
             modelBuilder.Entity<DeliveryType>().ToTable("DeliveryTypes", "Common");
             modelBuilder.Entity<Tag>().ToTable("Tags", "Common");
+
+            modelBuilder.Entity<ProgramAssignment>()
+                .ToTable("ProgramCourses", "CareerTech");
         }
     }
 }

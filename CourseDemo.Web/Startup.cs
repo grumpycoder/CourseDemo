@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace CourseDemo.Web
 {
@@ -26,20 +27,22 @@ namespace CourseDemo.Web
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddControllers();
-            services.AddMvc();
+        {    
+            var connectionString = Configuration.GetConnectionString("CourseContext"); 
             
-            // services.AddDbContext<CourseContext>(opt =>
-            //     opt.UseSqlServer(Configuration.GetConnectionString("CourseContext"),
-            //             x => x.MigrationsAssembly("CourseCatalog.Web"))
-            //         .EnableSensitiveDataLogging()
-            // ); 
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                    ); 
+            
+            services.AddMvc();
 
             services.AddDbContext<CourseContext>(
                 options => options.UseSqlServer(
-                    Configuration.GetConnectionString("CourseContext")));
-            
+                    connectionString)
+                    .EnableSensitiveDataLogging().UseLazyLoadingProxies()
+                );
+        
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

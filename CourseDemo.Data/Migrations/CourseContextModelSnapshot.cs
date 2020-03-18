@@ -68,9 +68,6 @@ namespace CourseDemo.Data.Migrations
                     b.Property<int?>("LowGradeId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SubjectAreaId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Tags")
                         .HasColumnType("nvarchar(max)");
 
@@ -204,6 +201,34 @@ namespace CourseDemo.Data.Migrations
                     b.ToTable("Programs","CareerTech");
                 });
 
+            modelBuilder.Entity("CourseDemo.Domain.ProgramAssignment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("BeginYear")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EndYear")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProgramId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("ProgramId");
+
+                    b.ToTable("ProgramCourses","CareerTech");
+                });
+
             modelBuilder.Entity("CourseDemo.Domain.Tag", b =>
                 {
                     b.Property<int>("Id")
@@ -242,6 +267,18 @@ namespace CourseDemo.Data.Migrations
                     b.HasOne("CourseDemo.Domain.Grade", "LowGrade")
                         .WithMany()
                         .HasForeignKey("LowGradeId");
+                });
+
+            modelBuilder.Entity("CourseDemo.Domain.ProgramAssignment", b =>
+                {
+                    b.HasOne("CourseDemo.Domain.Course", "Course")
+                        .WithMany("ProgramAssignments")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("CourseDemo.Domain.Program", "Program")
+                        .WithMany()
+                        .HasForeignKey("ProgramId");
                 });
 #pragma warning restore 612, 618
         }
