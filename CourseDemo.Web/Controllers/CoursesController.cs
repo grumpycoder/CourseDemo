@@ -76,6 +76,8 @@ namespace CourseDemo.Web.Controllers
         [HttpPut, Route("{courseId}")]
         public async Task<IActionResult> UpdateCourse(int courseId, UpdateCourseDto dto)
         {
+            var course = _context.Courses.Find(courseId);
+
             return Ok();
         }
     }
