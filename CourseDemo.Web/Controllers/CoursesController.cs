@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CourseDemo.Data;
 using CourseDemo.Domain;
 using CourseDemo.Domain.Dtos;
+using CourseDemo.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,11 +25,6 @@ namespace CourseDemo.Web.Controllers
         public async Task<IActionResult> GetCourse(int id)
         {
             var course = await _context.Courses
-                .Include(x => x.HighGrade)
-                .Include(x => x.LowGrade)
-                .Include(x => x.CourseType)
-                .Include(x => x.CourseLevel)
-                .Include(x => x.ProgramAssignments)
                 .SingleOrDefaultAsync(x => x.Id == id);
 
             return Ok(course);
@@ -38,16 +34,15 @@ namespace CourseDemo.Web.Controllers
         public async Task<IActionResult> AssignProgram(int courseId, AssignProgramDto dto)
         {
             var course = await _context.Courses
-                .Include(x => x.HighGrade)
-                .Include(x => x.LowGrade)
-                .Include(x => x.CourseType)
-                .Include(x => x.CourseLevel)
                 .Include(x => x.ProgramAssignments)
                 .SingleOrDefaultAsync(x => x.Id == courseId);
 
             var program = _context.Programs.Find(dto.ProgramId);
+
+            var validPeriod = ValidPeriod.Create(dto.BeginYear, dto.EndYear);
+            if (validPeriod.IsFailure) return BadRequest(validPeriod.Error);
             
-            course.AssignProgram(program, dto.BeginYear, dto.EndYear);
+            course.AssignProgram(program, validPeriod.Value);
 
             _context.SaveChanges();
 
@@ -58,10 +53,6 @@ namespace CourseDemo.Web.Controllers
         public async Task<IActionResult> RemoveProgram(int courseId, int programId)
         {
             var course = await _context.Courses
-                .Include(x => x.HighGrade)
-                .Include(x => x.LowGrade)
-                .Include(x => x.CourseType)
-                .Include(x => x.CourseLevel)
                 .Include(x => x.ProgramAssignments)
                 .SingleOrDefaultAsync(x => x.Id == courseId);
 
@@ -78,6 +69,7 @@ namespace CourseDemo.Web.Controllers
         {
             var course = _context.Courses.Find(courseId);
 
+            //TODO: Update course details
             return Ok();
         }
     }

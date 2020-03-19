@@ -11,8 +11,7 @@ namespace CourseDemo.Domain.Models
         public string CourseCode { get; private set; }
         public string Description { get; private set; }
 
-        public int? BeginYear { get; private set; }
-        public int? EndYear { get; private set; }
+        public virtual ValidPeriod ValidPeriod { get; private set; }
 
         public int? BeginSequence { get; private set; }
         public int? EndSequence { get; private set; }
@@ -22,7 +21,7 @@ namespace CourseDemo.Domain.Models
         public string CreditTypes { get; private set; }
         public string Tags { get; private set; }
         public decimal? CreditUnits { get; private set; }
-
+        
         public virtual Grade LowGrade { get; private set; }
         public virtual Grade HighGrade { get; private set; }
 
@@ -36,13 +35,13 @@ namespace CourseDemo.Domain.Models
         {
         }
 
-        public void AssignProgram(Program careerTechProgram, int beginYear, int? endYear)
+        public void AssignProgram(Program careerTechProgram, ValidPeriod validPeriod)
         {
             ProgramAssignment assignment = _programAssignments.FirstOrDefault(x => x.Program == careerTechProgram);
 
             if (assignment != null) return;
 
-            var newAssignment = new ProgramAssignment(careerTechProgram, this, beginYear, endYear);
+            var newAssignment = new ProgramAssignment(careerTechProgram, this, validPeriod);
             _programAssignments.Add(newAssignment);
         }
 

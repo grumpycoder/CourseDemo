@@ -8,6 +8,9 @@ namespace CourseDemo.Data
     public class CourseContext : DbContext
     {
 
+        public DbSet<Course> Courses { get; set; }
+        public DbSet<Program> Programs { get; set; }
+
         // public CourseContext(DbContextOptions<CourseContext> options) : base(options)
         // {
         //     ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
@@ -39,8 +42,6 @@ namespace CourseDemo.Data
             }
         }
         
-        public DbSet<Course> Courses { get; set; }
-        public DbSet<Program> Programs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -50,6 +51,13 @@ namespace CourseDemo.Data
                 x.HasMany(p => p.ProgramAssignments).WithOne(p => p.Course)
                     .OnDelete(DeleteBehavior.Cascade)
                     .Metadata.PrincipalToDependent.SetPropertyAccessMode(PropertyAccessMode.Field);
+
+                x.OwnsOne(p => p.ValidPeriod, p =>
+                {
+                    p.Property(pp => pp.BeginYear).HasColumnName("BeginYear");
+                    p.Property(pp => pp.EndYear).HasColumnName("EndYear");
+                });
+               
             });
 
             // modelBuilder.Entity<Program>(x =>
@@ -58,7 +66,16 @@ namespace CourseDemo.Data
             //     x.Property(p => p.Id).HasColumnName("Id"); 
             // }); 
 
-            modelBuilder.Entity<Program>().ToTable("Programs", "CareerTech"); 
+            modelBuilder.Entity<Program>(x =>
+            {
+                x.ToTable("Programs", "CareerTech");
+                x.OwnsOne(p => p.ValidPeriod, p =>
+                {
+                    p.Property(pp => pp.BeginYear).HasColumnName("BeginYear");
+                    p.Property(pp => pp.EndYear).HasColumnName("EndYear");
+                }); 
+                    
+            }); 
             
             modelBuilder.Entity<CourseLevel>().ToTable("CourseLevels", "Common");
             modelBuilder.Entity<CourseType>().ToTable("CourseTypes", "Common");
@@ -66,8 +83,16 @@ namespace CourseDemo.Data
             modelBuilder.Entity<DeliveryType>().ToTable("DeliveryTypes", "Common");
             modelBuilder.Entity<Tag>().ToTable("Tags", "Common");
 
-            modelBuilder.Entity<ProgramAssignment>()
-                .ToTable("ProgramCourses", "CareerTech");
+            modelBuilder.Entity<ProgramAssignment>(x =>
+            {
+                x.ToTable("ProgramCourses", "CareerTech");
+                x.OwnsOne(p => p.ValidPeriod, p =>
+                {
+                    p.Property(pp => pp.BeginYear).HasColumnName("BeginYear");
+                    p.Property(pp => pp.EndYear).HasColumnName("EndYear");
+                }); 
+            });
+
         }
     }
 }
