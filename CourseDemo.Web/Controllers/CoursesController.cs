@@ -1,13 +1,9 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using CourseDemo.Data;
-using CourseDemo.Domain;
 using CourseDemo.Domain.Dtos;
 using CourseDemo.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace CourseDemo.Web.Controllers
 {
@@ -22,7 +18,8 @@ namespace CourseDemo.Web.Controllers
             _context = context;
         }
 
-        [HttpGet, Route("{id}")]
+        [HttpGet]
+        [Route("{id}")]
         public async Task<IActionResult> GetCourse(int id)
         {
             var course = await _context.Courses
@@ -31,7 +28,8 @@ namespace CourseDemo.Web.Controllers
             return Ok(course);
         }
 
-        [HttpPost, Route("{courseId}/programs")]
+        [HttpPost]
+        [Route("{courseId}/programs")]
         public async Task<IActionResult> AssignProgram(int courseId, AssignProgramDto dto)
         {
             var course = await _context.Courses
@@ -50,7 +48,8 @@ namespace CourseDemo.Web.Controllers
             return Ok();
         }
 
-        [HttpDelete, Route("{courseId}/programs/{programId}")]
+        [HttpDelete]
+        [Route("{courseId}/programs/{programId}")]
         public async Task<IActionResult> RemoveProgram(int courseId, int programId)
         {
             var course = await _context.Courses
@@ -65,28 +64,29 @@ namespace CourseDemo.Web.Controllers
             return Ok();
         }
 
-        [HttpPut, Route("{courseId}")]
+        [HttpPut]
+        [Route("{courseId}")]
         public async Task<IActionResult> UpdateCourse(int courseId, UpdateCourseDto dto)
         {
-            var course = _context.Courses.Find(courseId);
+            var course = await _context.Courses.FindAsync(courseId);
 
             course.UpdateDetails(dto.Title, dto.Description);
-            
+
             var validPeriod = ValidPeriod.Create(dto.BeginYear, dto.EndYear);
             if (validPeriod.IsFailure) return BadRequest(validPeriod.Error);
             course.ChangeValidPeriod(validPeriod.Value);
 
             course.ChangeCreditDetails(dto.CreditRecoveryAvailable, dto.CreditAdvancementAvailable, dto.CreditUnits);
-            
-            Grade lowGrade = _context.Grades.Find(dto.LowGradeId);
-            Grade highGrade = _context.Grades.Find(dto.HighGradeId);
+
+            var lowGrade = _context.Grades.Find(dto.LowGradeId);
+            var highGrade = _context.Grades.Find(dto.HighGradeId);
             var result = course.ChangeGradeRange(lowGrade, highGrade);
             if (result.IsFailure) return BadRequest(result.Error);
 
             var courseType = _context.CourseTypes.Find(dto.CourseTypeId);
             var courseLevel = _context.CourseLevels.Find(dto.CourseLevelId);
             course.ChangeCourseType(courseType, courseLevel);
-            
+
             _context.SaveChanges();
 
             return Ok();
