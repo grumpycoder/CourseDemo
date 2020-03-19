@@ -69,6 +69,7 @@ namespace CourseDemo.Domain.Models
 
         public void ChangeCreditDetails(bool isCreditRecovery, bool isCreditAdvancement, decimal creditUnits)
         {
+            //TODO: Is CreditRecovery and CreditAdvancement inverse.. both can't be true?
             CreditRecoveryAvailable = isCreditRecovery;
             CreditAdvancementAvailable = isCreditAdvancement;
             CreditUnits = creditUnits; 
@@ -77,6 +78,7 @@ namespace CourseDemo.Domain.Models
         public Result ChangeGradeRange(Grade lowGrade, Grade highGrade)
         {
             if(lowGrade.Id > highGrade.Id) return Result.Failure("Low Grade is higher than High Grade");
+            
             LowGrade = lowGrade;
             HighGrade = highGrade; 
             return Result.Success();
@@ -84,6 +86,7 @@ namespace CourseDemo.Domain.Models
 
         public void ChangeCourseType(CourseType courseType, CourseLevel courseLevel)
         {
+            //TODO: Any rules applied to a type of course and a level of a course. ie CourseType=Elementary and CourseLevel=College?
             CourseType = courseType;
             CourseLevel = courseLevel; 
         }
