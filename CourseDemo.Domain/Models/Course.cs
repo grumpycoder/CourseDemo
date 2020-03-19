@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using CSharpFunctionalExtensions;
 
 namespace CourseDemo.Domain.Models
 {
@@ -19,8 +20,9 @@ namespace CourseDemo.Domain.Models
         public bool? CreditRecoveryAvailable { get; private set; }
         public bool? CreditAdvancementAvailable { get; private set; }
         public string CreditTypes { get; private set; }
-        public string Tags { get; private set; }
         public decimal? CreditUnits { get; private set; }
+        
+        public string Tags { get; private set; }
         
         public virtual Grade LowGrade { get; private set; }
         public virtual Grade HighGrade { get; private set; }
@@ -45,7 +47,7 @@ namespace CourseDemo.Domain.Models
             _programAssignments.Add(newAssignment);
         }
 
-        public void UnassignProgram(Program program)
+        public void RemoveProgram(Program program)
         {
             ProgramAssignment assignment = _programAssignments.FirstOrDefault(x => x.Program == program);
 
@@ -53,5 +55,38 @@ namespace CourseDemo.Domain.Models
 
             _programAssignments.Remove(assignment);
         }
+
+        public void UpdateDetails(string title, string description)
+        {
+            Title = title;
+            Description = description;
+        }
+
+        public void ChangeValidPeriod(ValidPeriod validPeriod)
+        {
+            ValidPeriod = validPeriod; 
+        }
+
+        public void ChangeCreditDetails(bool isCreditRecovery, bool isCreditAdvancement, decimal creditUnits)
+        {
+            CreditRecoveryAvailable = isCreditRecovery;
+            CreditAdvancementAvailable = isCreditAdvancement;
+            CreditUnits = creditUnits; 
+        }
+
+        public Result ChangeGradeRange(Grade lowGrade, Grade highGrade)
+        {
+            if(lowGrade.Id > highGrade.Id) return Result.Failure("Low Grade is higher than High Grade");
+            LowGrade = lowGrade;
+            HighGrade = highGrade; 
+            return Result.Success();
+        }
+
+        public void ChangeCourseType(CourseType courseType, CourseLevel courseLevel)
+        {
+            CourseType = courseType;
+            CourseLevel = courseLevel; 
+        }
+        
     }
 }

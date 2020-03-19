@@ -10,7 +10,10 @@ namespace CourseDemo.Data
 
         public DbSet<Course> Courses { get; set; }
         public DbSet<Program> Programs { get; set; }
-
+        public DbSet<Grade> Grades { get; set; }
+        public DbSet<CourseType> CourseTypes { get; set; }
+        public DbSet<CourseLevel> CourseLevels { get; set; }
+        
         // public CourseContext(DbContextOptions<CourseContext> options) : base(options)
         // {
         //     ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;

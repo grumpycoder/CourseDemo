@@ -7,6 +7,7 @@ using CourseDemo.Domain.Dtos;
 using CourseDemo.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace CourseDemo.Web.Controllers
 {
@@ -41,14 +42,14 @@ namespace CourseDemo.Web.Controllers
 
             var validPeriod = ValidPeriod.Create(dto.BeginYear, dto.EndYear);
             if (validPeriod.IsFailure) return BadRequest(validPeriod.Error);
-            
+
             course.AssignProgram(program, validPeriod.Value);
 
             _context.SaveChanges();
 
             return Ok();
         }
-        
+
         [HttpDelete, Route("{courseId}/programs/{programId}")]
         public async Task<IActionResult> RemoveProgram(int courseId, int programId)
         {
@@ -57,7 +58,7 @@ namespace CourseDemo.Web.Controllers
                 .SingleOrDefaultAsync(x => x.Id == courseId);
 
             var program = _context.Programs.Find(programId);
-            course.UnassignProgram(program);
+            course.RemoveProgram(program);
 
             _context.SaveChanges();
 
@@ -69,7 +70,25 @@ namespace CourseDemo.Web.Controllers
         {
             var course = _context.Courses.Find(courseId);
 
-            //TODO: Update course details
+            course.UpdateDetails(dto.Title, dto.Description);
+            
+            var validPeriod = ValidPeriod.Create(dto.BeginYear, dto.EndYear);
+            if (validPeriod.IsFailure) return BadRequest(validPeriod.Error);
+            course.ChangeValidPeriod(validPeriod.Value);
+
+            course.ChangeCreditDetails(dto.CreditRecoveryAvailable, dto.CreditAdvancementAvailable, dto.CreditUnits);
+            
+            Grade lowGrade = _context.Grades.Find(dto.LowGradeId);
+            Grade highGrade = _context.Grades.Find(dto.HighGradeId);
+            var result = course.ChangeGradeRange(lowGrade, highGrade);
+            if (result.IsFailure) return BadRequest(result.Error);
+
+            var courseType = _context.CourseTypes.Find(dto.CourseTypeId);
+            var courseLevel = _context.CourseLevels.Find(dto.CourseLevelId);
+            course.ChangeCourseType(courseType, courseLevel);
+            
+            _context.SaveChanges();
+
             return Ok();
         }
     }
