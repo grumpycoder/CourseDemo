@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CSharpFunctionalExtensions;
 
@@ -37,6 +38,16 @@ namespace CourseDemo.Domain.Models
         {
         }
 
+        public Course(string title, string description, ValidPeriod validPeriod, Grade lowGrade, Grade highGrade)
+        {
+            var gradeResult = ChangeGradeRange(lowGrade, highGrade);
+            if(gradeResult.IsFailure) throw new ArgumentException("Low Grade is higher than High Grade");
+
+            ChangeValidPeriod(validPeriod);
+            UpdateDetails(title, description);
+            ChangeValidPeriod(validPeriod);
+        }
+        
         public void AssignProgram(Program careerTechProgram, ValidPeriod validPeriod)
         {
             ProgramAssignment assignment = _programAssignments.FirstOrDefault(x => x.Program == careerTechProgram);
@@ -77,6 +88,7 @@ namespace CourseDemo.Domain.Models
 
         public Result ChangeGradeRange(Grade lowGrade, Grade highGrade)
         {
+            //TODO: Validate grade ranges?
             if(lowGrade.Id > highGrade.Id) return Result.Failure("Low Grade is higher than High Grade");
             
             LowGrade = lowGrade;

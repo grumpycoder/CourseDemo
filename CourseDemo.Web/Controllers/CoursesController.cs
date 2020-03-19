@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using CourseDemo.Data;
 using CourseDemo.Domain.Dtos;
@@ -89,6 +90,29 @@ namespace CourseDemo.Web.Controllers
 
             _context.SaveChanges();
 
+            return Ok();
+        }
+
+        [HttpPost, Route("")]
+        public async Task<IActionResult> CreateCourse(CreateCourseDto dto)
+        {
+            var validPeriod = ValidPeriod.Create(dto.BeginYear, dto.EndYear);
+            if (validPeriod.IsFailure) return BadRequest(validPeriod.Error);
+            
+            var lowGrade = _context.Grades.Find(dto.LowGradeId);
+            var highGrade = _context.Grades.Find(dto.HighGradeId);
+            if (lowGrade == null || highGrade == null) return BadRequest("Invalid Grade range supplied");
+            
+            try
+            {
+                var course = new Course(dto.Title, dto.Description, validPeriod.Value, lowGrade, highGrade);
+                _context.Courses.Attach(course);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
             return Ok();
         }
     }
