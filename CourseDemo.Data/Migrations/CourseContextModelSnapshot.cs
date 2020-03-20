@@ -19,7 +19,28 @@ namespace CourseDemo.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("CourseDemo.Domain.Course", b =>
+            modelBuilder.Entity("CourseDemo.Domain.Models.Cluster", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ClusterCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Clusters","CareerTech");
+                });
+
+            modelBuilder.Entity("CourseDemo.Domain.Models.Course", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -27,9 +48,6 @@ namespace CourseDemo.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int?>("BeginSequence")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("BeginYear")
                         .HasColumnType("int");
 
                     b.Property<string>("CourseCode")
@@ -59,9 +77,6 @@ namespace CourseDemo.Data.Migrations
                     b.Property<int?>("EndSequence")
                         .HasColumnType("int");
 
-                    b.Property<int?>("EndYear")
-                        .HasColumnType("int");
-
                     b.Property<int?>("HighGradeId")
                         .HasColumnType("int");
 
@@ -87,7 +102,7 @@ namespace CourseDemo.Data.Migrations
                     b.ToTable("Courses","Common");
                 });
 
-            modelBuilder.Entity("CourseDemo.Domain.CourseLevel", b =>
+            modelBuilder.Entity("CourseDemo.Domain.Models.CourseLevel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -108,7 +123,7 @@ namespace CourseDemo.Data.Migrations
                     b.ToTable("CourseLevels","Common");
                 });
 
-            modelBuilder.Entity("CourseDemo.Domain.CourseType", b =>
+            modelBuilder.Entity("CourseDemo.Domain.Models.CourseType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -132,7 +147,7 @@ namespace CourseDemo.Data.Migrations
                     b.ToTable("CourseTypes","Common");
                 });
 
-            modelBuilder.Entity("CourseDemo.Domain.DeliveryType", b =>
+            modelBuilder.Entity("CourseDemo.Domain.Models.DeliveryType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -150,7 +165,7 @@ namespace CourseDemo.Data.Migrations
                     b.ToTable("DeliveryTypes","Common");
                 });
 
-            modelBuilder.Entity("CourseDemo.Domain.Grade", b =>
+            modelBuilder.Entity("CourseDemo.Domain.Models.Grade", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -168,21 +183,15 @@ namespace CourseDemo.Data.Migrations
                     b.ToTable("Grades","Common");
                 });
 
-            modelBuilder.Entity("CourseDemo.Domain.Program", b =>
+            modelBuilder.Entity("CourseDemo.Domain.Models.Program", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("BeginYear")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("EndYear")
-                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -201,20 +210,14 @@ namespace CourseDemo.Data.Migrations
                     b.ToTable("Programs","CareerTech");
                 });
 
-            modelBuilder.Entity("CourseDemo.Domain.ProgramAssignment", b =>
+            modelBuilder.Entity("CourseDemo.Domain.Models.ProgramAssignment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("BeginYear")
-                        .HasColumnType("int");
-
                     b.Property<int?>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("EndYear")
                         .HasColumnType("int");
 
                     b.Property<int?>("ProgramId")
@@ -229,7 +232,7 @@ namespace CourseDemo.Data.Migrations
                     b.ToTable("ProgramCourses","CareerTech");
                 });
 
-            modelBuilder.Entity("CourseDemo.Domain.Tag", b =>
+            modelBuilder.Entity("CourseDemo.Domain.Models.Tag", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -250,35 +253,133 @@ namespace CourseDemo.Data.Migrations
                     b.ToTable("Tags","Common");
                 });
 
-            modelBuilder.Entity("CourseDemo.Domain.Course", b =>
+            modelBuilder.Entity("CourseDemo.Domain.Models.Cluster", b =>
                 {
-                    b.HasOne("CourseDemo.Domain.CourseLevel", "CourseLevel")
+                    b.OwnsOne("CourseDemo.Domain.Models.ValidPeriod", "ValidPeriod", b1 =>
+                        {
+                            b1.Property<int>("ClusterId")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                            b1.Property<int>("BeginYear")
+                                .HasColumnName("BeginYear")
+                                .HasColumnType("int");
+
+                            b1.Property<int?>("EndYear")
+                                .HasColumnName("EndYear")
+                                .HasColumnType("int");
+
+                            b1.HasKey("ClusterId");
+
+                            b1.ToTable("Clusters");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ClusterId");
+                        });
+                });
+
+            modelBuilder.Entity("CourseDemo.Domain.Models.Course", b =>
+                {
+                    b.HasOne("CourseDemo.Domain.Models.CourseLevel", "CourseLevel")
                         .WithMany()
                         .HasForeignKey("CourseLevelId");
 
-                    b.HasOne("CourseDemo.Domain.CourseType", "CourseType")
+                    b.HasOne("CourseDemo.Domain.Models.CourseType", "CourseType")
                         .WithMany()
                         .HasForeignKey("CourseTypeId");
 
-                    b.HasOne("CourseDemo.Domain.Grade", "HighGrade")
+                    b.HasOne("CourseDemo.Domain.Models.Grade", "HighGrade")
                         .WithMany()
                         .HasForeignKey("HighGradeId");
 
-                    b.HasOne("CourseDemo.Domain.Grade", "LowGrade")
+                    b.HasOne("CourseDemo.Domain.Models.Grade", "LowGrade")
                         .WithMany()
                         .HasForeignKey("LowGradeId");
+
+                    b.OwnsOne("CourseDemo.Domain.Models.ValidPeriod", "ValidPeriod", b1 =>
+                        {
+                            b1.Property<int>("CourseId")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                            b1.Property<int>("BeginYear")
+                                .HasColumnName("BeginYear")
+                                .HasColumnType("int");
+
+                            b1.Property<int?>("EndYear")
+                                .HasColumnName("EndYear")
+                                .HasColumnType("int");
+
+                            b1.HasKey("CourseId");
+
+                            b1.ToTable("Courses");
+
+                            b1.WithOwner()
+                                .HasForeignKey("CourseId");
+                        });
                 });
 
-            modelBuilder.Entity("CourseDemo.Domain.ProgramAssignment", b =>
+            modelBuilder.Entity("CourseDemo.Domain.Models.Program", b =>
                 {
-                    b.HasOne("CourseDemo.Domain.Course", "Course")
+                    b.OwnsOne("CourseDemo.Domain.Models.ValidPeriod", "ValidPeriod", b1 =>
+                        {
+                            b1.Property<int>("ProgramId")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                            b1.Property<int>("BeginYear")
+                                .HasColumnName("BeginYear")
+                                .HasColumnType("int");
+
+                            b1.Property<int?>("EndYear")
+                                .HasColumnName("EndYear")
+                                .HasColumnType("int");
+
+                            b1.HasKey("ProgramId");
+
+                            b1.ToTable("Programs");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProgramId");
+                        });
+                });
+
+            modelBuilder.Entity("CourseDemo.Domain.Models.ProgramAssignment", b =>
+                {
+                    b.HasOne("CourseDemo.Domain.Models.Course", "Course")
                         .WithMany("ProgramAssignments")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("CourseDemo.Domain.Program", "Program")
+                    b.HasOne("CourseDemo.Domain.Models.Program", "Program")
                         .WithMany()
                         .HasForeignKey("ProgramId");
+
+                    b.OwnsOne("CourseDemo.Domain.Models.ValidPeriod", "ValidPeriod", b1 =>
+                        {
+                            b1.Property<int>("ProgramAssignmentId")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                            b1.Property<int>("BeginYear")
+                                .HasColumnName("BeginYear")
+                                .HasColumnType("int");
+
+                            b1.Property<int?>("EndYear")
+                                .HasColumnName("EndYear")
+                                .HasColumnType("int");
+
+                            b1.HasKey("ProgramAssignmentId");
+
+                            b1.ToTable("ProgramCourses");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProgramAssignmentId");
+                        });
                 });
 #pragma warning restore 612, 618
         }
