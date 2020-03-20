@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using CourseDemo.Data;
 using CourseDemo.Domain.Dtos;
@@ -17,6 +18,15 @@ namespace CourseDemo.Web.Controllers
         public CoursesController(CourseContext context)
         {
             _context = context;
+        }
+
+        [HttpGet]
+        [Route("")]
+        public async Task<IActionResult> GetCourses()
+        {
+            var list = await _context.Courses.Take(20).ToListAsync();
+
+            return Ok(list);
         }
 
         [HttpGet]
