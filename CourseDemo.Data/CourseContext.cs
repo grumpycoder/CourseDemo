@@ -14,6 +14,7 @@ namespace CourseDemo.Data
         public DbSet<CourseType> CourseTypes { get; set; }
         public DbSet<CourseLevel> CourseLevels { get; set; }
         public DbSet<Cluster> Clusters { get; set; }
+        public DbSet<Credential> Credentials { get; set; }
         
         
         // public CourseContext(DbContextOptions<CourseContext> options) : base(options)
@@ -85,6 +86,17 @@ namespace CourseDemo.Data
             modelBuilder.Entity<Cluster>(x =>
             {
                 x.ToTable("Clusters", "CareerTech");
+                x.OwnsOne(p => p.ValidPeriod, p =>
+                {
+                    p.Property(pp => pp.BeginYear).HasColumnName("BeginYear");
+                    p.Property(pp => pp.EndYear).HasColumnName("EndYear");
+                }); 
+                    
+            }); 
+            
+            modelBuilder.Entity<Credential>(x =>
+            {
+                x.ToTable("Credentials", "CareerTech");
                 x.OwnsOne(p => p.ValidPeriod, p =>
                 {
                     p.Property(pp => pp.BeginYear).HasColumnName("BeginYear");

@@ -147,6 +147,30 @@ namespace CourseDemo.Data.Migrations
                     b.ToTable("CourseTypes","Common");
                 });
 
+            modelBuilder.Entity("CourseDemo.Domain.Models.Credential", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CredentialCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsReimbursable")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Credentials","CareerTech");
+                });
+
             modelBuilder.Entity("CourseDemo.Domain.Models.DeliveryType", b =>
                 {
                     b.Property<int>("Id")
@@ -318,6 +342,32 @@ namespace CourseDemo.Data.Migrations
 
                             b1.WithOwner()
                                 .HasForeignKey("CourseId");
+                        });
+                });
+
+            modelBuilder.Entity("CourseDemo.Domain.Models.Credential", b =>
+                {
+                    b.OwnsOne("CourseDemo.Domain.Models.ValidPeriod", "ValidPeriod", b1 =>
+                        {
+                            b1.Property<int>("CredentialId")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                            b1.Property<int>("BeginYear")
+                                .HasColumnName("BeginYear")
+                                .HasColumnType("int");
+
+                            b1.Property<int?>("EndYear")
+                                .HasColumnName("EndYear")
+                                .HasColumnType("int");
+
+                            b1.HasKey("CredentialId");
+
+                            b1.ToTable("Credentials");
+
+                            b1.WithOwner()
+                                .HasForeignKey("CredentialId");
                         });
                 });
 
