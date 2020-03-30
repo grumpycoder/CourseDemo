@@ -52,7 +52,7 @@ namespace CourseDemo.Web.Controllers
         }
         
         [HttpPost, Route("")]
-        public async Task<IActionResult> CreateCluster(int id, CreateClusterDto dto)
+        public async Task<IActionResult> CreateCluster(CreateClusterDto dto)
         {
             var validPeriod = ValidPeriod.Create(dto.BeginYear, dto.EndYear);
             if (validPeriod.IsFailure) return BadRequest(validPeriod.Error);
